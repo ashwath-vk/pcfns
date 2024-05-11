@@ -1,23 +1,6 @@
-
-
-print("{:^100}".format("Room Finder"))
-print("\n" * 1)
-print("{:^100}".format("Version 1.0 - 05th March 2024"))
-print("\n" * 2)
+import streamlit as st
 
 correct_password = "interesting"
-
-   
-password_attempt = input("Enter the password: ")
-
-    
-if password_attempt == correct_password:
-        print("Access granted! You may proceed with the program.")
-        print("\n" * 1)
-        
-else:
-        print("Incorrect password. Access denied.")
-        exit()
 
 room_occupancy = {
     'Room 1': {
@@ -32,7 +15,7 @@ room_occupancy = {
         9: {'Monday': None, 'Tuesday': None, 'Wednesday': 'Shiva', 'Thursday': 'Ravis', 'Friday': 'Kanka', 'Saturday': None},
         10: {'Monday': None, 'Tuesday': 'Avnsh', 'Wednesday': None, 'Thursday': None, 'Friday': 'Kanka', 'Saturday': None},
     },
-    'Room 2': {
+'Room 2': {
         1: {'Monday': 'Hrish', 'Tuesday': 'As', 'Wednesday': None, 'Thursday': None, 'Friday': None, 'Saturday': 'Charu'},
         2: {'Monday': 'Jyoti', 'Tuesday': 'Saroj', 'Wednesday': 'Shlni', 'Thursday': 'Shlni', 'Friday': 'Shlni', 'Saturday': 'Grvr'},
         3: {'Monday': 'Prnka', 'Tuesday': 'Mnprt', 'Wednesday': 'Alok', 'Thursday': 'Mnprt', 'Friday': 'Alok', 'Saturday': 'Jgmet'},
@@ -1078,7 +1061,6 @@ room_occupancy = {
     }
 }
 
-
 def find_unoccupied_rooms(day, time_slot, absent_teachers=None):
     if absent_teachers is None:
         absent_teachers = []
@@ -1099,24 +1081,34 @@ def case_insensitive_inputs(prompts):
         inputs.append(user_input)
     return inputs
 
-day = input("\nEnter the day (e.g., Monday, Tuesday, etc.): ").title()
-time_slot = int(input("\n 08:30 to 09:30 - Slot 1 \n 09:30 to 10:30 - Slot 2 \n 10:30 to 11:30 - Slot 3 \n 11:30 to 12:30 - Slot 4 \n 12:30 to 13:30 - Slot 5 \n 13:30 to 14:00 - Slot 6 \n 14:00 to 15:00 - Slot 7 \n 15:00 to 16:00 - Slot 8 \n 16:00 to 17:00 - Slot 9 \n 17:00 to 18:00 - Slot 10 \n \n Enter the time slot (1-10): "))
-absent_teachers_input = input("\nEnter the name(s) of the absent teacher(s) separated by commas (if any), otherwise leave blank: ").title()
+def main():
+    st.title("Room Finder")
+    st.write("Version 1.0 - 05th March 2024")
 
-absent_teachers = [teacher.strip() for teacher in absent_teachers_input.split(',') if teacher.strip()]
+    password_attempt = st.text_input("Enter the password:")
+    if password_attempt == correct_password:
+        st.success("Access granted! You may proceed with the program.")
+    else:
+        st.error("Incorrect password. Access denied.")
+        st.stop()
 
+    day = st.text_input("Enter the day (e.g., Monday, Tuesday, etc.):")
+    time_slot = st.selectbox("Select the time slot:", list(range(1, 11)), index=0)
+    absent_teachers_input = st.text_input("Enter the name(s) of the absent teacher(s) separated by commas (if any), otherwise leave blank:")
 
-unoccupied_rooms = find_unoccupied_rooms(day, time_slot, absent_teachers)
-if unoccupied_rooms:
-    print("\n\nUnoccupied rooms:\n", unoccupied_rooms)
-else:
-    print("\n\nNo rooms are unoccupied during this time slot.")
+    day = day.title()
+    absent_teachers = [teacher.strip().title() for teacher in absent_teachers_input.split(',') if teacher.strip()]
 
-while True:
-  user_input = input("\n\nType 'close' to end program.")
-  if user_input.lower() == "close": 
-    break  
-  else:
-    print("Invalid command. Try again.") 
+    unoccupied_rooms = find_unoccupied_rooms(day, time_slot, absent_teachers)
 
-print("Program terminated.")
+    if unoccupied_rooms:
+        st.write("Unoccupied rooms:")
+        st.write(unoccupied_rooms)
+    else:
+        st.write("No rooms are unoccupied during this time slot.")
+
+    if st.button("Close"):
+        st.write("Program terminated.")
+
+if __name__ == "__main__":
+    main()
