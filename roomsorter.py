@@ -1,7 +1,5 @@
 import streamlit as st
 
-correct_password = "interesting"
-
 room_occupancy = {
     'Room 1': {
         1: {'Monday': None, 'Tuesday': 'Amit', 'Wednesday': 'Anuj', 'Thursday': None, 'Friday': 'Amit', 'Saturday': 'Alok'},
@@ -15,7 +13,8 @@ room_occupancy = {
         9: {'Monday': None, 'Tuesday': None, 'Wednesday': 'Shiva', 'Thursday': 'Ravis', 'Friday': 'Kanka', 'Saturday': None},
         10: {'Monday': None, 'Tuesday': 'Avnsh', 'Wednesday': None, 'Thursday': None, 'Friday': 'Kanka', 'Saturday': None},
     },
-'Room 2': {
+
+    'Room 2': {
         1: {'Monday': 'Hrish', 'Tuesday': 'As', 'Wednesday': None, 'Thursday': None, 'Friday': None, 'Saturday': 'Charu'},
         2: {'Monday': 'Jyoti', 'Tuesday': 'Saroj', 'Wednesday': 'Shlni', 'Thursday': 'Shlni', 'Friday': 'Shlni', 'Saturday': 'Grvr'},
         3: {'Monday': 'Prnka', 'Tuesday': 'Mnprt', 'Wednesday': 'Alok', 'Thursday': 'Mnprt', 'Friday': 'Alok', 'Saturday': 'Jgmet'},
@@ -1061,54 +1060,28 @@ room_occupancy = {
     }
 }
 
-def find_unoccupied_rooms(day, time_slot, absent_teachers=None):
-    if absent_teachers is None:
-        absent_teachers = []
-
+def find_unoccupied_rooms(day, time_slot):
     unoccupied_rooms = []
     for room, occupancy in room_occupancy.items():
         occupied_teacher = occupancy.get(time_slot, {}).get(day)
-        if occupied_teacher in absent_teachers:
-            unoccupied_rooms.append(room)
         if not occupied_teacher:
             unoccupied_rooms.append(room)
     return unoccupied_rooms
-
-def case_insensitive_inputs(prompts):
-    inputs = []
-    for prompt in prompts:
-        user_input = input(prompt).title()
-        inputs.append(user_input)
-    return inputs
 
 def main():
     st.title("Room Finder")
     st.write("Version 1.0 - 05th March 2024")
 
-    password_attempt = st.text_input("Enter the password:")
-    if password_attempt == correct_password:
-        st.success("Access granted! You may proceed with the program.")
-    else:
-        st.error("Incorrect password. Access denied.")
-        st.stop()
-
-    day = st.text_input("Enter the day (e.g., Monday, Tuesday, etc.):")
+    day = st.selectbox("Select the day of the week:", ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'], index=0)
     time_slot = st.selectbox("Select the time slot:", list(range(1, 11)), index=0)
-    absent_teachers_input = st.text_input("Enter the name(s) of the absent teacher(s) separated by commas (if any), otherwise leave blank:")
 
-    day = day.title()
-    absent_teachers = [teacher.strip().title() for teacher in absent_teachers_input.split(',') if teacher.strip()]
-
-    unoccupied_rooms = find_unoccupied_rooms(day, time_slot, absent_teachers)
+    unoccupied_rooms = find_unoccupied_rooms(day, time_slot)
 
     if unoccupied_rooms:
         st.write("Unoccupied rooms:")
         st.write(unoccupied_rooms)
     else:
         st.write("No rooms are unoccupied during this time slot.")
-
-    if st.button("Close"):
-        st.write("Program terminated.")
 
 if __name__ == "__main__":
     main()
