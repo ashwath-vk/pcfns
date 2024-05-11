@@ -1073,7 +1073,19 @@ def main():
     st.write("Version 1.0 - 05th March 2024")
 
     day = st.selectbox("Select the day of the week:", ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'], index=0)
-    time_slot = st.selectbox("Select the time slot:", list(range(1, 11)), index=0)
+    time_slots = {
+        1: '8:30 A.M. to 9:30 A.M.',
+        2: '9:30 A.M. to 10:30 A.M.',
+        3: '10:30 A.M. to 11:30 A.M.',
+        4: '11:30 A.M. to 12:30 P.M.',
+        5: '12:30 P.M. to 1:30 P.M.',
+        6: '1:30 P.M. to 2:00 P.M.',
+        7: '2:00 P.M. to 3:00 P.M.',
+        8: '3:00 P.M. to 4:00 P.M.',
+        9: '4:00 P.M. to 5:00 P.M.',
+        10: '5:00 P.M. to 6:00 P.M.'
+    }
+    time_slot = st.selectbox("Select the time slot:", list(time_slots.keys()), format_func=lambda x: time_slots[x])
 
     unoccupied_rooms = find_unoccupied_rooms(day, time_slot)
 
